@@ -1,9 +1,12 @@
-import React from 'react'
-
-const Home = () => {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <div>Home</div>
-  )
+    <main>
+        SIDEBAR
+        {children}
+    </main>
+  );
 }
-
-export default Home
