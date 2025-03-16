@@ -21,12 +21,16 @@ import { Input } from "./ui/input";
 import CustomInput from './CustomInput';
 import { authFormSchema } from '@/lib/utils';
 import { Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { signIn, signUp } from '@/lib/actions/user.actions';
 
 
 
-const AuthForm = ({ type }: { type:string }) =>{
+const AuthForm = ({ type }: { type:string }) => {
+  const router = useRouter();
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  
 
   const formSchema = authFormSchema(type);
 
@@ -35,15 +39,52 @@ const AuthForm = ({ type }: { type:string }) =>{
         resolver: zodResolver(formSchema),
         defaultValues: {
             email: "",
-            password: '0'
+            password: ''
         },
     })
 
     //2.define submit handler
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        setIsLoading(true)
-        console.log(values)
-        setIsLoading(false);
+    const onSubmit = async (data: z.infer<typeof formSchema>) => {
+        setIsLoading(true);
+
+        try{
+            // Sign up with Appwrite & create plaid token
+
+            if(type === 'sign-up'){
+                const userData = {
+                    firstName: data.firstName!,
+                    lastName: data.lastName!,
+                    address1: data.address1!,
+                    city: data.city!,
+                    province: data.province!,
+                    postalCode: data.postalCode!,
+                    dateOfBirth: data.dateOfBirth!,
+                    id: data.id!,
+                    email: data.email,
+                    password: data.password
+
+                }
+                const newUser = await signUp(data);
+
+                setUser(newUser)
+
+            }
+            
+            if(type === 'sign-in'){
+                const response = await signIn({
+                   email: data.email,
+                   password: data.password,
+                })
+                
+                 if(response) router.push('/')
+            }
+        
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsLoading(false);
+        }
+
     }
 
   return (
@@ -93,6 +134,7 @@ const AuthForm = ({ type }: { type:string }) =>{
                                     <CustomInput control={form.control} name='lastName' label="Last Name" placeholder="Enter your Last Name"/>
                                 </div>
                                 <CustomInput control={form.control} name='address1' label="Address" placeholder="Enter your specific Address"/>
+                                <CustomInput control={form.control} name='province' label="Province" placeholder="Enter you Province"/>
                                 <div className="flex gap-4">
                                     <CustomInput control={form.control} name='postalCode' label="Postal Code" placeholder="Postal Code"/>
                                     <CustomInput control={form.control} name='city' label="City" placeholder="Select your city"/>
