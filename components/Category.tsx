@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 
 import { Progress } from "./ui/progress";
 
-const Category = ({ category }: CategoryProps) => {
+export const Category = ({ category }: CategoryProps) => {
   const {
     bg,
     circleBg,
@@ -34,5 +34,3 @@ const Category = ({ category }: CategoryProps) => {
     </div>
   );
 };
-
-export default Category;

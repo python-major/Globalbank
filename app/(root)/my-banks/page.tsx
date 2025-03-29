@@ -1,40 +1,42 @@
-import BankCard from '@/components/BankCard';
-import HearderBox from '@/components/HearderBox'
-import { getAccounts } from '@/lib/actions/bank.actions';
-import { getLoggedInUser } from '@/lib/actions/user.actions';
-import React from 'react'
+import { redirect } from "next/navigation";
 
-const MyBanks = async () => {
+import BankCard from "@/components/bank/BankCard";
+import { HeaderBox } from "@/components/common";
+import { getAccounts } from "@/lib/actions/bank.actions";
+import { getLoggedInUser } from "@/lib/actions/user.actions";
+
+const page = async () => {
   const loggedIn = await getLoggedInUser();
-  const accounts = await getAccounts({ 
-    userId: loggedIn.$id 
-  })
-  
+  if (!loggedIn) redirect("/sign-in");
+
+  const accounts = await getAccounts({
+    userId: loggedIn?.$id,
+  });
+
   return (
-    <section className='flex'>
+    <section className="flex">
       <div className="my-banks">
-        <HearderBox
+        <HeaderBox
           title="My Bank Accounts"
-          subtext="Effortlessly Manage Your Banking Accounts."
+          subtext="Effortlessly Manage Your Banking Activities"
         />
 
         <div className="space-y-4">
-          <h2 className="header-2">
-            Your Bank Accounts
-          </h2>
+          <h2 className="header-2">Your cards</h2>
           <div className="flex flex-wrap gap-6">
-            {accounts && accounts.data.map((a: Account) => (
-              <BankCard 
-                key={accounts.id}
-                account={a}
-                userName={loggedIn?.firstName}
-              />
-            ))}
+            {accounts &&
+              accounts.data.map((account: Account) => (
+                <BankCard
+                  key={account.id}
+                  account={account}
+                  userName={loggedIn?.name}
+                />
+              ))}
           </div>
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default MyBanks
+export default page;

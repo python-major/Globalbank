@@ -21,12 +21,12 @@ export const BankDropdown = ({
 }: BankDropdownProps) => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [selected, setSelected] = useState(accounts[0]);
+  const [selected, setSeclected] = useState(accounts[0]);
 
   const handleBankChange = (id: string) => {
     const account = accounts.find((account) => account.appwriteItemId === id)!;
 
-    setSelected(account);
+    setSeclected(account);
     const newUrl = formUrlQuery({
       params: searchParams.toString(),
       key: "id",
@@ -45,7 +45,7 @@ export const BankDropdown = ({
       onValueChange={(value) => handleBankChange(value)}
     >
       <SelectTrigger
-        className={`flex w-full bg-white gap-3 md:w-[300px] ${otherStyles}`}
+        className={`flex w-full gap-3 md:w-[300px] ${otherStyles}`}
       >
         <Image
           src="icons/credit-card.svg"
@@ -56,7 +56,7 @@ export const BankDropdown = ({
         <p className="line-clamp-1 w-full text-left">{selected.name}</p>
       </SelectTrigger>
       <SelectContent
-        className={`w-full bg-white md:w-[300px] ${otherStyles}`}
+        className={`w-full md:w-[300px] ${otherStyles}`}
         align="end"
       >
         <SelectGroup>

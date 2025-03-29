@@ -93,7 +93,7 @@ export const signUp = async ({ password, ...userData }: SignUpParams) => {
 
         const user = await getUserInfo({ userId: session.userId });
 
-        return parseStringify(response);
+        return parseStringify(Response);
 
         // the SignUpPage component ...
     }   catch (error) {
